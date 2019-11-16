@@ -18,7 +18,7 @@ WHITE = (255, 255, 255)
 RED   = (255,   0,   0)
 WIDTH = 700
 HEIGHT = 400
-SPEED = 5
+SPEED = 0.5
 # Dirs
 DIRECT_DICT = {pg.K_UP   : ( 0,-1),
                pg.K_DOWN : ( 0, 1),
@@ -37,6 +37,7 @@ class Player(pygame.sprite.Sprite):
         # This could also be an image loaded from the disk.
         self.image = pygame.Surface([width, height])
         self.image.fill(color)
+        self.move = [0, 0]
         # Fetch the rectangle object that has the dimensions of the image
         # image.
         # Update the position of this object by setting the values
@@ -121,15 +122,16 @@ while not done:
        # just like we'd fetch letters out of a string.
     # Set the player object to the mouse location
     keys = pygame.key.get_pressed()
-    move = [0, 0]
     for key in DIRECT_DICT:
         if keys[key]:
             for i in (0, 1):
-                move[i] += DIRECT_DICT[key][i] * SPEED
-    if 0 <= player.rect.x + move[0] <= WIDTH - player.image.get_width():
-        player.rect.x += move[0]
-    if 0 <= player.rect.y + move[1] <= HEIGHT - player.image.get_height():
-        player.rect.y += move[1]
+                player.move[i] += DIRECT_DICT[key][i] * SPEED
+    if not (0 <= player.rect.x <= WIDTH):
+        player.move[0] *= -1
+    player.rect.x += player.move[0]
+    if not (0 <= player.rect.y <= HEIGHT):
+        player.move[1] *= -1
+    player.rect.y += player.move[1]
     # See if the player block has collided with anything.
     blocks_hit_list = pygame.sprite.spritecollide(player, block_list, True)
  
