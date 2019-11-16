@@ -1,0 +1,1 @@
+http://programarcadegames.com/python_examples/f.php?file=sprite_collect_blocks.py
