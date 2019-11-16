@@ -155,11 +155,11 @@ while not done:
         if keys[key]:
             for i in (0, 1):
                 player.move[i] += DIRECT_DICT[key][i] * SPEED
-    if not (0 <= player.rect.x <= WIDTH):
-        player.move[0] *= -1
+    if not (0 <= player.rect.x <= WIDTH + player.image.get_width()):
+        player.move[0] *= -0.9
     player.rect.x += player.move[0]
-    if not (0 <= player.rect.y <= HEIGHT):
-        player.move[1] *= -1
+    if not (0 <= player.rect.y <= HEIGHT + player.image.get_height()):
+        player.move[1] *= -0.9
     player.rect.y += player.move[1]
     # See if the player block has collided with anything.
     blocks_hit_list = pygame.sprite.spritecollide(player, block_list, True)
