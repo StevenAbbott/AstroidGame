@@ -25,6 +25,10 @@ DIRECT_DICT = {pg.K_UP   : ( 0,-1),
                pg.K_RIGHT: ( 1, 0),
                pg.K_LEFT : (-1, 0)}
 
+# Define some more constants
+DAMAGE_CONSTANT = 10
+SHIP_IMAGE = pygame.image.load("shipSprite.png")
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, color, width, height):
         """ Constructor. Pass in the color of the block,
@@ -43,6 +47,8 @@ class Player(pygame.sprite.Sprite):
         # Update the position of this object by setting the values
         # of rect.x and rect.y
         self.rect = self.image.get_rect(center=(WIDTH/2,HEIGHT/2))
+        
+        self.ammo = 0
  
 class Block(pygame.sprite.Sprite):
     """
@@ -67,6 +73,29 @@ class Block(pygame.sprite.Sprite):
         # Update the position of this object by setting the values
         # of rect.x and rect.y
         self.rect = self.image.get_rect()
+        
+class Bullet():
+    def __init__(self, color, width, height):
+        """ Constructor. Pass in the color of the block,
+        and its size. """
+ 
+        # Call the parent class (Sprite) constructor
+        super().__init__()
+ 
+        # Create an image of the block, and fill it with a color.
+        # This could also be an image loaded from the disk.
+        self.image = pygame.Surface([width, height])
+        self.image.fill(color)
+ 
+        # Fetch the rectangle object that has the dimensions of the image
+        # image.
+        # Update the position of this object by setting the values
+        # of rect.x and rect.y
+        self.rect = self.image.get_rect()
+        
+        self.speed = 0
+        self.damage = DAMAGE_CONSTANT
+        
  
 # Initialize Pygame
 pygame.init()
@@ -137,8 +166,8 @@ while not done:
  
     # Check the list of collisions.
     for block in blocks_hit_list:
-        score += 1
-        print(score)
+        player.ammo += 1
+        print(player.ammo)
  
     # Draw all the spites
     all_sprites_list.draw(screen)
