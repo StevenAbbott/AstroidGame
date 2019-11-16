@@ -15,6 +15,25 @@ import random
 BLACK = (  0,   0,   0)
 WHITE = (255, 255, 255)
 RED   = (255,   0,   0)
+
+class Player(pygame.sprite.Sprite):
+    def __init__(self, color, width, height):
+        """ Constructor. Pass in the color of the block,
+        and its size. """
+ 
+        # Call the parent class (Sprite) constructor
+        super().__init__()
+ 
+        # Create an image of the block, and fill it with a color.
+        # This could also be an image loaded from the disk.
+        self.image = pygame.Surface([width, height])
+        self.image.fill(color)
+ 
+        # Fetch the rectangle object that has the dimensions of the image
+        # image.
+        # Update the position of this object by setting the values
+        # of rect.x and rect.y
+        self.rect = self.image.get_rect()    
  
 class Block(pygame.sprite.Sprite):
     """
@@ -69,7 +88,7 @@ for i in range(50):
     all_sprites_list.add(block)
  
 # Create a RED player block
-player = Block(RED, 20, 15)
+player = Player(RED, 20, 15)
 all_sprites_list.add(player)
  
 # Loop until the user clicks the close button.
