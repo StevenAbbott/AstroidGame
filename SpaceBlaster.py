@@ -9,12 +9,21 @@ http://simpson.edu/computer-science/
 Explanation video: http://youtu.be/4W2AqUetBi4
 """
 import pygame
+import pygame as pg
 import random
  
 # Define some colors
 BLACK = (  0,   0,   0)
 WHITE = (255, 255, 255)
 RED   = (255,   0,   0)
+WIDTH = 700
+HEIGHT = 400
+SPEED = 5
+# Dirs
+DIRECT_DICT = {pg.K_UP   : ( 0,-1),
+               pg.K_DOWN : ( 0, 1),
+               pg.K_RIGHT: ( 1, 0),
+               pg.K_LEFT : (-1, 0)}
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, color, width, height):
@@ -28,12 +37,11 @@ class Player(pygame.sprite.Sprite):
         # This could also be an image loaded from the disk.
         self.image = pygame.Surface([width, height])
         self.image.fill(color)
- 
         # Fetch the rectangle object that has the dimensions of the image
         # image.
         # Update the position of this object by setting the values
         # of rect.x and rect.y
-        self.rect = self.image.get_rect()    
+        self.rect = self.image.get_rect(center=(WIDTH/2,HEIGHT/2))
  
 class Block(pygame.sprite.Sprite):
     """
@@ -63,9 +71,7 @@ class Block(pygame.sprite.Sprite):
 pygame.init()
  
 # Set the height and width of the screen
-screen_width = 700
-screen_height = 400
-screen = pygame.display.set_mode([screen_width, screen_height])
+screen = pygame.display.set_mode([WIDTH, HEIGHT])
  
 # This is a list of 'sprites.' Each block in the program is
 # added to this list. The list is managed by a class called 'Group.'
@@ -80,8 +86,8 @@ for i in range(50):
     block = Block(BLACK, 20, 15)
  
     # Set a random location for the block
-    block.rect.x = random.randrange(screen_width)
-    block.rect.y = random.randrange(screen_height)
+    block.rect.x = random.randrange(WIDTH)
+    block.rect.y = random.randrange(HEIGHT)
  
     # Add the block to the list of objects
     block_list.add(block)
@@ -110,14 +116,20 @@ while not done:
  
     # Get the current mouse position. This returns the position
     # as a list of two numbers.
-    pos = pygame.mouse.get_pos()
- 
+
     # Fetch the x and y out of the list,
        # just like we'd fetch letters out of a string.
     # Set the player object to the mouse location
-    player.rect.x = pos[0]
-    player.rect.y = pos[1]
- 
+    keys = pygame.key.get_pressed()
+    move = [0, 0]
+    for key in DIRECT_DICT:
+        if keys[key]:
+            for i in (0, 1):
+                move[i] += DIRECT_DICT[key][i] * SPEED
+    if 0 <= player.rect.x + move[0] <= WIDTH - player.image.get_width():
+        player.rect.x += move[0]
+    if 0 <= player.rect.y + move[1] <= HEIGHT - player.image.get_height():
+        player.rect.y += move[1]
     # See if the player block has collided with anything.
     blocks_hit_list = pygame.sprite.spritecollide(player, block_list, True)
  
